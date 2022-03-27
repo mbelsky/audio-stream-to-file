@@ -1,0 +1,19 @@
+{
+  "name": "audio-stream-to-file",
+  "version": "0.1.0",
+  "description": "",
+  "main": "audio-stream-to-file.mjs",
+  "engines": {
+    "node": ">=16.0",
+    "npm": ">=8.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.6.1"
+  }
+}
