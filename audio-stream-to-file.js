@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import {saveAudioStreamToFile} from './save-audio-stream-to-file'
+import {saveAudioStreamToFile} from './save-audio-stream-to-file.js'
 import {tryToGetStreamResponse} from './try-to-get-stream-response.js'
 ;['STREAM_URL', 'DEST_DIR'].forEach((variable) => {
   if (!process.env[variable]) {
