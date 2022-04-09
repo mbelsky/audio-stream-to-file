@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import {URL} from 'url'
 import {
   isDestDirOk,
   saveAudioStreamToFile,
@@ -17,7 +18,8 @@ if (!isDestDirOk(destDirPath)) {
   process.exit(1)
 }
 
-const res = await tryToGetStreamResponse(process.env.STREAM_URL)
+const url = new URL(process.env.STREAM_URL)
+const res = await tryToGetStreamResponse(url)
 
 if (!res) {
   throw new Error('response object is falsy')

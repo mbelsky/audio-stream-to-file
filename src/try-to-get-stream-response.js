@@ -5,7 +5,7 @@ const GET_RESPONSE_RETRY_TIMEOUT = 1 * 30 * 1000
 
 /**
  *
- * @param {string} url
+ * @param {URL} url
  * @returns Promise<http.IncomingMessage>
  */
 export async function tryToGetStreamResponse(url) {
