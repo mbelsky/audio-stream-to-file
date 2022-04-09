@@ -2,7 +2,7 @@
   "name": "audio-stream-to-file",
   "version": "0.1.0",
   "description": "",
-  "main": "audio-stream-to-file.js",
+  "main": "./src/audio-stream-to-file.js",
   "type": "module",
   "engines": {
     "node": ">=16.0",
