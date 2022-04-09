@@ -1,4 +1,23 @@
+import * as fs from 'fs'
 import {logger} from './logger.js'
+
+export function isDestDirOk(destDirPath) {
+  try {
+    fs.accessSync(destDirPath, fs.constants.W_OK)
+  } catch (e) {
+    logger.error(`dest dir is not accessible`, e)
+    return false
+  }
+
+  try {
+    const fileStats = fs.lstatSync(destDirPath)
+
+    return fileStats.isDirectory()
+  } catch (e) {
+    logger.error(`dest dir lstat failed`, e)
+    return false
+  }
+}
 
 export function saveAudioStreamToFile(res, writeStream) {
   res
