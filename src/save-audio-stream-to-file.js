@@ -1,3 +1,5 @@
+import {logger} from './logger.js'
+
 export function saveAudioStreamToFile(res, writeStream) {
   res
     .on('data', (data) => {
@@ -6,17 +8,17 @@ export function saveAudioStreamToFile(res, writeStream) {
     .on('error', (...args) => {
       writeStream.end()
 
-      console.error(`EVENT error, VALUE: `, safeStringify(args))
+      logger.error(`EVENT error, VALUE: `, safeStringify(args))
       process.exit(1)
     })
   ;['close', 'end'].forEach((event) => {
     res.on(event, () => {
       writeStream.end()
 
-      console.log(`EVENT ${event}`)
+      logger.log(`EVENT ${event}`)
 
       if (!res.complete) {
-        console.error(
+        logger.error(
           `The connection was terminated while the message was still being sent`,
         )
         process.exit(1)

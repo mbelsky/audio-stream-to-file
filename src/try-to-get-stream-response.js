@@ -1,4 +1,5 @@
 import * as https from 'https'
+import {logger} from './logger.js'
 
 const GET_RESPONSE_RETRY_TIMEOUT = 1 * 30 * 1000
 
@@ -13,8 +14,8 @@ export async function tryToGetStreamResponse(url) {
 
     return res
   } catch (e) {
-    console.error(e)
-    console.log('Wait to retry')
+    logger.error(e)
+    logger.log('Wait to retry')
 
     return new Promise((resolve) => {
       setTimeout(
@@ -30,7 +31,7 @@ function getStreamResponse(url) {
     const req = https.request(url, (res) => {
       const {headers, statusCode} = res
 
-      console.log(`statusCode: ${statusCode}`)
+      logger.log(`statusCode: ${statusCode}`)
 
       const {location} = headers
       const is3xxStatusCode = statusCode > 299 && statusCode < 400
