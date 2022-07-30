@@ -20,7 +20,7 @@ const GET_STREAM_RESPONSE_TIMEOUT = 2 * 60 * 60 * 1000
 const destDirPath = path.resolve(process.cwd(), process.env.DEST_DIR)
 
 if (!isDestDirOk(destDirPath)) {
-  process.exit(1)
+  throw new Error('dest dir is not valid')
 }
 
 const url = new URL(process.env.STREAM_URL)
@@ -47,8 +47,7 @@ try {
 
   saveAudioStreamToFile(response, writeStream)
 } catch {
-  // well we've tried.
-  process.exit(0)
+  // well we have tried.
 }
 
 function getTimeoutPromise() {
