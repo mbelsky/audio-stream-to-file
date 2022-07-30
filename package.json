@@ -12,7 +12,7 @@
     "test": "node --test"
   },
   "keywords": [],
-  "author": "",
+  "author": "Max Belsky",
   "license": "MIT",
   "devDependencies": {
     "prettier": "^2.6.1"
