@@ -4,9 +4,9 @@ function getTime() {
 
 export const logger = {
   error() {
-    console.error(getTime(), ...arguments)
+    console.error(getTime(), 'err', ...arguments)
   },
   log() {
-    console.log(getTime(), ...arguments)
+    console.log(getTime(), 'info', ...arguments)
   },
 }
