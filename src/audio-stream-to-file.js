@@ -26,10 +26,14 @@ if (!isDestDirOk(destDirPath)) {
 const url = new URL(process.env.STREAM_URL)
 
 try {
+  const [timeoutPromise, timeoutPromiseId] = getTimeoutPromise()
+
   const response = await Promise.race([
     tryToGetStreamResponse(url),
-    getTimeoutPromise(),
+    timeoutPromise,
   ])
+
+  clearTimeout(timeoutPromiseId)
 
   if (!response) {
     throw new Error('response object is falsy')
@@ -46,16 +50,18 @@ try {
   const writeStream = fs.createWriteStream(writeStreamPath)
 
   saveAudioStreamToFile(response, writeStream)
-} catch {
-  // well we have tried.
+} catch (error) {
+  logger.error(error)
+  throw error
 }
 
 function getTimeoutPromise() {
-  return new Promise((_resolve, reject) => {
-    setTimeout(() => {
-      logger.error('tryToGetStreamResponse time out')
-
-      reject()
+  let id
+  let promise = new Promise((_resolve, reject) => {
+    id = setTimeout(() => {
+      reject('tryToGetStreamResponse time out')
     }, GET_STREAM_RESPONSE_TIMEOUT)
   })
+
+  return [promise, id]
 }
