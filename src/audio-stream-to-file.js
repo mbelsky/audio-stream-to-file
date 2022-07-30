@@ -2,6 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import {URL} from 'url'
 import {logger} from './logger.js'
+import {generateFilename} from './generate-filename.js'
 import {
   isDestDirOk,
   saveAudioStreamToFile,
@@ -38,12 +39,9 @@ try {
   const contentType = headers['content-type']
   const [, audioFormat] = contentType.split('/')
 
-  const filename = new Date().toISOString()
+  const filename = generateFilename(new Date().toISOString(), audioFormat)
 
-  const writeStreamPath = path.resolve(
-    destDirPath,
-    `${filename}.${audioFormat}`,
-  )
+  const writeStreamPath = path.resolve(destDirPath, filename)
 
   const writeStream = fs.createWriteStream(writeStreamPath)
 
