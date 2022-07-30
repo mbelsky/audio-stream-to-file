@@ -25,35 +25,35 @@ if (!isDestDirOk(destDirPath)) {
 
 const url = new URL(process.env.STREAM_URL)
 
+let response
+
 try {
   const [timeoutPromise, timeoutPromiseId] = getTimeoutPromise()
 
-  const response = await Promise.race([
-    tryToGetStreamResponse(url),
-    timeoutPromise,
-  ])
+  response = await Promise.race([tryToGetStreamResponse(url), timeoutPromise])
 
   clearTimeout(timeoutPromiseId)
-
-  if (!response) {
-    throw new Error('response object is falsy')
-  }
-
-  const {headers} = response
-  const contentType = headers['content-type']
-  const [, audioFormat] = contentType.split('/')
-
-  const filename = generateFilename(new Date().toISOString(), audioFormat)
-
-  const writeStreamPath = path.resolve(destDirPath, filename)
-
-  const writeStream = fs.createWriteStream(writeStreamPath)
-
-  saveAudioStreamToFile(response, writeStream)
 } catch (error) {
   logger.error(error)
-  throw error
+  // After time out finish as a successful process
+  process.exit()
 }
+
+if (!response) {
+  throw new Error('response object is falsy')
+}
+
+const {headers} = response
+const contentType = headers['content-type']
+const [, audioFormat] = contentType.split('/')
+
+const filename = generateFilename(new Date().toISOString(), audioFormat)
+
+const writeStreamPath = path.resolve(destDirPath, filename)
+
+const writeStream = fs.createWriteStream(writeStreamPath)
+
+saveAudioStreamToFile(response, writeStream)
 
 function getTimeoutPromise() {
   let id
