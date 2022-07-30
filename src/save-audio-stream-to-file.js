@@ -19,31 +19,45 @@ export function isDestDirOk(destDirPath) {
   }
 }
 
-export function saveAudioStreamToFile(res, writeStream) {
-  res
+/**
+ * @returns Promise<void>
+ */
+export function saveAudioStreamToFile(response, writeStream) {
+  let resolve, reject
+
+  const promise = new Promise((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+
+  response
     .on('data', (data) => {
       writeStream.write(data)
     })
     .on('error', (...args) => {
       writeStream.end()
 
-      logger.error(`EVENT error, VALUE: `, safeStringify(args))
-      process.exit(1)
+      reject(`EVENT error, VALUE: ` + safeStringify(args))
     })
   ;['close', 'end'].forEach((event) => {
-    res.on(event, () => {
+    response.on(event, () => {
       writeStream.end()
 
       logger.log(`EVENT ${event}`)
 
-      if (!res.complete) {
-        logger.error(
-          `The connection was terminated while the message was still being sent`,
-        )
-        process.exit(1)
+      if (!response.complete) {
+        const message = `The connection was terminated while the message was still being sent`
+
+        logger.error(message)
+
+        reject(message)
       }
+
+      resolve()
     })
   })
+
+  return promise
 }
 
 function safeStringify(data) {
