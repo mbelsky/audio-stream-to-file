@@ -32,25 +32,27 @@ export function saveAudioStreamToFile(response, writeStream) {
 
   response
     .on('data', (data) => {
+      logger.log('EVENT data')
       writeStream.write(data)
     })
     .on('error', (...args) => {
+      logger.error('EVENT error')
       writeStream.end()
 
       reject(`EVENT error, VALUE: ` + safeStringify(args))
     })
   ;['close', 'end'].forEach((event) => {
     response.on(event, () => {
-      writeStream.end()
-
       logger.log(`EVENT ${event}`)
+
+      writeStream.end()
 
       if (!response.complete) {
         const message = `The connection was terminated while the message was still being sent`
 
         logger.error(message)
 
-        reject(message)
+        return reject(message)
       }
 
       resolve()

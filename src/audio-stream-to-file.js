@@ -60,7 +60,11 @@ async function run(attempt = 0) {
 
   const writeStream = fs.createWriteStream(writeStreamPath)
 
-  await saveAudioStreamToFile(response, writeStream)
+  try {
+    await saveAudioStreamToFile(response, writeStream)
+  } catch (e) {
+    logger.error(e)
+  }
 
   // After successful saveAudioStreamToFile execute `run` again in case stream is restarting.
   run(attempt + 1)
