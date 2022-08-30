@@ -3,6 +3,9 @@ function getTime() {
 }
 
 export const logger = {
+  debug() {
+    console.log(getTime(), 'debug', ...arguments)
+  },
   error() {
     console.error(getTime(), 'err', ...arguments)
   },

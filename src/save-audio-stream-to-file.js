@@ -32,7 +32,7 @@ export function saveAudioStreamToFile(response, writeStream) {
 
   response
     .on('data', (data) => {
-      logger.log('EVENT data')
+      logger.debug('EVENT data')
       writeStream.write(data)
     })
     .on('error', (...args) => {
