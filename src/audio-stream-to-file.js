@@ -34,7 +34,10 @@ async function run(attempt = 0) {
   try {
     const [timeoutPromise, timeoutPromiseId] = getTimeoutPromise()
 
-    response = await Promise.race([tryToGetStreamResponse(url), timeoutPromise])
+    response = await Promise.race([
+      tryToGetStreamResponse(url, attempt),
+      timeoutPromise,
+    ])
 
     clearTimeout(timeoutPromiseId)
   } catch (error) {

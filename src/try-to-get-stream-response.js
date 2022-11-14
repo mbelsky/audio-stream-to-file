@@ -1,14 +1,17 @@
 import * as https from 'https'
+import {getRetryTimeout} from './get-retry-timeout.js'
 import {logger} from './logger.js'
-
-const GET_RESPONSE_RETRY_TIMEOUT = 1 * 30 * 1000
 
 /**
  *
  * @param {URL} url
  * @returns Promise<http.IncomingMessage>
  */
-export async function tryToGetStreamResponse(url) {
+export async function tryToGetStreamResponse(url, runAttempt) {
+  return tryToGetStreamResponseInternal(url, runAttempt, 0)
+}
+
+async function tryToGetStreamResponseInternal(url, runAttempt, tryAttempt) {
   try {
     const res = await getStreamResponse(url)
 
@@ -18,9 +21,14 @@ export async function tryToGetStreamResponse(url) {
     logger.log('Wait to retry')
 
     return new Promise((resolve) => {
+      const timeout = getRetryTimeout(runAttempt, tryAttempt)
+
       setTimeout(
-        () => resolve(tryToGetStreamResponse(url)),
-        GET_RESPONSE_RETRY_TIMEOUT,
+        () =>
+          resolve(
+            tryToGetStreamResponseInternal(url, runAttempt, tryAttempt + 1),
+          ),
+        timeout,
       )
     })
   }
